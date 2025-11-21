@@ -45,93 +45,131 @@ setInterval(createRain, 200);
 
 
 // =============================
-// YES / NO BUTTONS LOGIC
+// YES / NO BUTTON LOGIC
 // =============================
+const yesButtons = document.querySelectorAll('.yes-btn');
+const noButtons = document.querySelectorAll('.no-btn');
+const noBtnTeleport = document.getElementById('noBtn'); // optional teleporting No
 
-// Teleport counter for "No" buttons that move around
+// Handle Yes button click
+yesButtons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+        window.location.href = "index4.html?choice=Yes";
+    });
+});
+
+// Handle No button click (normal buttons)
+noButtons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+        window.location.href = "index2.html?choice=No";
+    });
+});
+
+// Teleporting No button logic (index2.html)
 let noClickCount = 0;
-
-// Handle Yes buttons
-document.querySelectorAll('.yes-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        localStorage.setItem('userChoice', 'Yes'); // store choice
-        // redirect handled by <a> href in HTML
-    });
-});
-
-// Handle No buttons that redirect immediately
-document.querySelectorAll('.no-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        localStorage.setItem('userChoice', 'No'); // store choice
-        // redirect handled by <a> href in HTML
-    });
-});
-
-// Handle teleporting No button (if using special one)
-const teleportNoBtn = document.getElementById("noBtn");
-if (teleportNoBtn) {
-    teleportNoBtn.addEventListener("click", function () {
+if(noBtnTeleport){
+    noBtnTeleport.addEventListener('click', function(){
         noClickCount++;
-        if (noClickCount < 5) {
-            // TELEPORT INSIDE SAFE AREA (middle 50% of screen)
+        if(noClickCount < 5){
             const containerWidth = window.innerWidth;
             const containerHeight = window.innerHeight;
 
             const safeMinX = containerWidth * 0.25;
-            const safeMaxX = containerWidth * 0.75 - teleportNoBtn.offsetWidth;
+            const safeMaxX = containerWidth * 0.75 - noBtnTeleport.offsetWidth;
             const safeMinY = containerHeight * 0.25;
-            const safeMaxY = containerHeight * 0.75 - teleportNoBtn.offsetHeight;
+            const safeMaxY = containerHeight * 0.75 - noBtnTeleport.offsetHeight;
 
             const newX = safeMinX + Math.random() * (safeMaxX - safeMinX);
             const newY = safeMinY + Math.random() * (safeMaxY - safeMinY);
 
-            teleportNoBtn.style.position = "absolute";
-            teleportNoBtn.style.left = `${newX}px`;
-            teleportNoBtn.style.top = `${newY}px`;
-
-        } else {
-            // 5th click → redirect to input page and store choice
-            localStorage.setItem('userChoice', 'No');
-            window.location.href = "index3.html"; // page with input message
+            noBtnTeleport.style.position = "absolute";
+            noBtnTeleport.style.left = `${newX}px`;
+            noBtnTeleport.style.top = `${newY}px`;
+        }else{
+            window.location.href = "index3.html?choice=No";
         }
     });
 }
 
+// =============================
+// GET CHOICE FROM QUERY PARAM
+// =============================
+function getChoiceFromURL(){
+    const params = new URLSearchParams(window.location.search);
+    return params.get('choice') || "";
+}
 
 // =============================
-// PREFILL MESSAGE INPUT WITH CHOICE
+// FORM / MESSAGE SUBMISSION
 // =============================
-window.addEventListener('DOMContentLoaded', () => {
-    const msgInput = document.getElementById('messageInput');
-    const choice = localStorage.getItem('userChoice');
+const messageInput = document.getElementById('messageInput');
+const gform = document.getElementById('gform');
+const sendBtn = document.getElementById('sendBtn');
 
-    if (choice && msgInput) {
-        msgInput.value = choice + ': '; // add Yes: or No: prefix
+// Function to submit message to Google Form
+function submitMessageToForm(message){
+    if(!gform){
+        // Create temporary form dynamically for index3.html
+        const tempForm = document.createElement('form');
+        tempForm.style.display = 'none';
+        tempForm.method = 'POST';
+        tempForm.action = "https://docs.google.com/forms/d/e/1FAIpQLSc2BeNlYTAsjrWmOeqKbxu6LHZoePtIbsoHLD_-kVIkWB_Yww/formResponse";
+        tempForm.target = "hidden_iframe";
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = "entry.374317346";
+        input.value = message;
+
+        tempForm.appendChild(input);
+        document.body.appendChild(tempForm);
+        tempForm.submit();
+        tempForm.remove();
+    } else {
+        // Use existing form on index4.html
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = messageInput.name;
+        hiddenInput.value = message;
+        gform.appendChild(hiddenInput);
+        gform.submit();
     }
-});
+}
 
+// Handle form submission (index4.html)
+if(gform){
+    gform.addEventListener('submit', function(e){
+        e.preventDefault();
 
-// =============================
-// GOOGLE FORM SUBMISSION
-// =============================
-var submitted = false;
+        const userChoice = getChoiceFromURL();
+        const combinedMessage = messageInput.value
+            ? messageInput.value + " - " + userChoice
+            : " - " + userChoice;
 
-$('#gform').on('submit', function(e) {
-    e.preventDefault(); // prevent redirect
-    submitted = true;
+        gform.style.display = 'none';
+        const confirmation = document.createElement('p');
+        confirmation.style.color = 'white';
+        confirmation.textContent = "Your message has been sent! Thank you.";
+        gform.parentNode.appendChild(confirmation);
 
-    const msgInput = document.getElementById('messageInput');
+        setTimeout(()=>submitMessageToForm(combinedMessage), 300);
+    });
+}
 
-    // ensure prefix exists
-    const choice = localStorage.getItem('userChoice') || '';
-    if (!msgInput.value.startsWith(choice)) {
-        msgInput.value = choice + ': ' + msgInput.value;
-    }
+// Handle button click on index3.html
+if(sendBtn && messageInput){
+    sendBtn.addEventListener('click', ()=>{
+        const userChoice = getChoiceFromURL();
+        const combinedMessage = messageInput.value
+            ? messageInput.value + " - " + userChoice
+            : " - " + userChoice;
 
-    // fade out form and show confirmation
-    $('#gform *').fadeOut(1000);
-    $('#gform').prepend('<p style="color:white; font-weight:bold;">Your message has been sent! Thank you.</p>');
+        sendBtn.style.display = 'none';
+        const confirmation = document.createElement('p');
+        confirmation.style.color = 'white';
+        confirmation.textContent = "Your message has been sent! Thank you.";
+        messageInput.parentNode.appendChild(confirmation);
 
-    // submit to hidden iframe after short delay
-    setTimeout(() => this.submit(), 500);
-});
+        submitMessageToForm(combinedMessage);
+    });
+}
