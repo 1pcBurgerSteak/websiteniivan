@@ -13,7 +13,7 @@ function createRain() {
     img.src = images[Math.floor(Math.random() * images.length)];
     img.style.left = Math.random() * window.innerWidth + 'px';
 
-    const size = 150 + Math.random() * 40;
+    const size = 20 + Math.random() * 20;
     img.style.width = size + 'px';
 
     container.appendChild(img);
@@ -92,5 +92,6 @@ $('#gform').on('submit', function(e) {
     // let the form submit to hidden iframe
     setTimeout(() => this.submit(), 500); // delay slightly to allow fade
 });
+
 
 
