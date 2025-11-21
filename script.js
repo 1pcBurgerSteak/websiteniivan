@@ -47,32 +47,33 @@ setInterval(createRain, 200);
 // NO BUTTON TELEPORT + REDIRECT
 // =============================
 let noClickCount = 0;
-
 const noBtn = document.getElementById("noBtn");
 
-if (noBtn) {
-    noBtn.addEventListener("click", function () {
-        noClickCount++;
+noBtn.addEventListener("click", function () {
+    noClickCount++;
 
-        if (noClickCount < 5) {
-            // SAFE TELEPORT AREA (middle 50% of screen)
-            const centerX = window.innerWidth * 0.25 + Math.random() * window.innerWidth * 0.5;
-            const centerY = window.innerHeight * 0.25 + Math.random() * window.innerHeight * 0.5;
+    if (noClickCount < 5) {
+        // Define safe area: middle 50% of container/screen
+        const containerWidth = window.innerWidth;
+        const containerHeight = window.innerHeight;
 
-            noBtn.style.position = "absolute";
+        const safeMinX = containerWidth * 0.25;
+        const safeMaxX = containerWidth * 0.75 - noBtn.offsetWidth;
+        const safeMinY = containerHeight * 0.25;
+        const safeMaxY = containerHeight * 0.75 - noBtn.offsetHeight;
 
-            // Make sure it NEVER goes off-screen
-            const safeX = Math.min(centerX, window.innerWidth - noBtn.offsetWidth - 20);
-            const safeY = Math.min(centerY, window.innerHeight - noBtn.offsetHeight - 20);
+        const newX = safeMinX + Math.random() * (safeMaxX - safeMinX);
+        const newY = safeMinY + Math.random() * (safeMaxY - safeMinY);
 
-            noBtn.style.left = safeX + "px";
-            noBtn.style.top = safeY + "px";
-        } else {
-            // 5th CLICK → LOAD PAGE
-            window.location.href = "index3.html";
-        }
-    });
-}
+        noBtn.style.position = "absolute";
+        noBtn.style.left = `${newX}px`;
+        noBtn.style.top = `${newY}px`;
+
+    } else {
+        // 5th click → load page
+        window.location.href = "index3.html";
+    }
+});
 
 
 // =============================
@@ -91,4 +92,5 @@ $('#gform').on('submit', function(e) {
     // let the form submit to hidden iframe
     setTimeout(() => this.submit(), 500); // delay slightly to allow fade
 });
+
 
