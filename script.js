@@ -50,51 +50,45 @@ let noClickCount = 0;
 
 const noBtn = document.getElementById("noBtn");
 
-noBtn.addEventListener("click", function () {
-    noClickCount++;
+if (noBtn) {
+    noBtn.addEventListener("click", function () {
+        noClickCount++;
 
-    if (noClickCount < 5) {
+        if (noClickCount < 5) {
             // SAFE TELEPORT AREA (middle 50% of screen)
-    const centerX = window.innerWidth * 0.25 + Math.random() * window.innerWidth * 0.5;
-    const centerY = window.innerHeight * 0.25 + Math.random() * window.innerHeight * 0.5;
+            const centerX = window.innerWidth * 0.25 + Math.random() * window.innerWidth * 0.5;
+            const centerY = window.innerHeight * 0.25 + Math.random() * window.innerHeight * 0.5;
 
-    noBtn.style.position = "absolute";
+            noBtn.style.position = "absolute";
 
-    // Make sure it NEVER goes off-screen
-    const safeX = Math.min(centerX, window.innerWidth - noBtn.offsetWidth - 20);
-    const safeY = Math.min(centerY, window.innerHeight - noBtn.offsetHeight - 20);
+            // Make sure it NEVER goes off-screen
+            const safeX = Math.min(centerX, window.innerWidth - noBtn.offsetWidth - 20);
+            const safeY = Math.min(centerY, window.innerHeight - noBtn.offsetHeight - 20);
 
-    noBtn.style.left = safeX + "px";
-    noBtn.style.top = safeY + "px";
-    } else {
-        // 5th CLICK → LOAD PAGE
-        window.location.href = "index3.html";
-    }
-});
-
-document.getElementById("sendBtn").addEventListener("click", function () {
-    const msg = document.getElementById("messageInput").value;
-
-    if (msg.trim() === "") {
-        alert("Wala kang message!");
-        return;
-    }
-
-    fetch("https://discord.com/api/webhooks/1441453724231925801/UowtVk701EvMDLvhkaePCEo74uFbOF_6s8XLEsoKbHirtaBv1LZX-oxGWn8yYKEUCILj", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            content: msg
-        })
-    })
-    .then(() => {
-        alert("Message sent!");
-        document.getElementById("messageInput").value = "";
-    })
-    .catch(err => {
-        alert("Error sending message");
-        console.error(err);
+            noBtn.style.left = safeX + "px";
+            noBtn.style.top = safeY + "px";
+        } else {
+            // 5th CLICK → LOAD PAGE
+            window.location.href = "index3.html";
+        }
     });
+}
+
+
+// =============================
+// GOOGLE FORM SUBMISSION
+// =============================
+var submitted = false;
+
+$('#gform').on('submit', function(e) {
+    e.preventDefault(); // prevent default redirect
+    submitted = true;
+
+    // Fade out form and show message
+    $('#gform *').fadeOut(1000);
+    $('#gform').prepend('<p style="color:white; font-weight:bold;">Your message has been sent! Thank you.</p>');
+
+    // let the form submit to hidden iframe
+    setTimeout(() => this.submit(), 500); // delay slightly to allow fade
 });
+
