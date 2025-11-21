@@ -30,7 +30,8 @@ function createRain() {
         img.style.top = top + 'px';
         img.style.transform = `rotate(${rotation}deg)`;
 
-        if (top > window.innerHeight) {
+        const removeOffset = 100; // distance from bottom before removing
+        if (top > window.innerHeight - removeOffset) {
             img.remove();
         } else {
             requestAnimationFrame(fall);
@@ -92,6 +93,7 @@ $('#gform').on('submit', function(e) {
     // let the form submit to hidden iframe
     setTimeout(() => this.submit(), 500); // delay slightly to allow fade
 });
+
 
 
 
