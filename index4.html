@@ -11,15 +11,20 @@
     <div class="center-box"> 
         <h2>Legit???</h2>
         <img src="images/cat4.png" alt="tahaw" class="center-img">
-        <div id = "message-box">
-            <input type="text" id="messageInput" placeholder="Message mo (optional)">
-            <button id="sendBtn" class="my-btn" style="background-color: green;">Send</button>
+        <div id="message-box">
+            <form name="gform" id="gform" enctype="text/plain" 
+              action="https://docs.google.com/forms/d/e/1FAIpQLSc2BeNlYTAsjrWmOeqKbxu6LHZoePtIbsoHLD_-kVIkWB_Yww/formResponse" 
+              target="hidden_iframe" onsubmit="submitted=true;">
+            <input type="text" name="entry.374317346" id="messageInput" placeholder="Message mo (optional)">
+            <button type="submit" class="my-btn" style="background-color: green;">Send</button>
+            </form>
+            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
         </div>
-        
     </div>
 
 <script src="script.js"></script>
 
 
 </body>
+
 </html>
