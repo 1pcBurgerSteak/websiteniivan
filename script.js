@@ -166,7 +166,7 @@ if(sendBtn && messageInput){
 
         sendBtn.style.display = 'none';
         const confirmation = document.createElement('p');
-        confirmation.style.color = 'white';
+        confirmation.style.color = 'black';
         confirmation.textContent = "Your message has been sent! Thank you.";
         messageInput.parentNode.appendChild(confirmation);
 
