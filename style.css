@@ -1,0 +1,64 @@
+body {
+    margin: 0;
+    overflow-x: hidden;
+    font-family: Arial, sans-serif;
+    background-image: url('images/kuromi2.jpg');
+    background-size: 200px;
+    
+}
+
+/* ---- CENTER BOX ---- */
+.center-box {
+    width: 300px;
+    margin: 40px auto; /* space at top + center horizontally */
+    padding: 20px;
+    border: 2px solid rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.3); /* transparent background */
+    border-radius: 15px;
+    text-align: left;
+    backdrop-filter: blur(4px);
+    font-family: 'Courier New', Courier, monospace;
+}
+
+/* ---- IMAGE ---- */
+.center-img {
+    width: 200px;
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto 20px;
+}
+
+/* ---- BUTTONS ---- */
+.btn-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center;
+}
+
+.my-btn {
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+    transition: 0.2s;
+}
+
+.my-btn:hover {
+    background: #1665c1;
+}
+
+/* ---- FALLING IMAGES ---- */
+#rain-container img {
+    position: absolute;
+    top: -100px;
+    width: 50px;
+    pointer-events: none;
+}
+
+/* ---- MESSAGE BOX ---- */
+#message-box {
+    text-align: center;
+}
